@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-//import Sorting from './sortingVisualizer';
+import Sorting from './sortingVisualizer';
 import HomePage from '../home';
 
 class MainFile extends Component {
@@ -11,7 +11,7 @@ class MainFile extends Component {
             home: {
                 title: 'DS and Algorithms',
                 subTitle: 'Visualizers and Animations',
-                container: <div />,
+                container: <Sorting />,
             },
             about: {
                 title: 'About us'
