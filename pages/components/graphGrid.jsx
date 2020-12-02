@@ -60,13 +60,17 @@ export default class GraphGrid extends Component {
         let i = 0;
         let anim = 0;
         animations.map(idx => {
-            //anim = i * spd;
-            this.state.gridItems[idx].classList.add(styles.active);
-            //this.state.gridItems[idx].style.animationIterationCount = "infinite";
+            anim = i * spd;
+            setTimeout(() => {
+                this.state.gridItems[idx].classList.add(styles.active);
+            }, anim);
             i++;
         });
-        //anim += 500;
-        setTimeout(function () { this.setState({ disabled: disabled }) }.bind(this), anim);
+        anim += 500;
+        setTimeout(function () {
+            this.setState({ disabled: disabled });
+        }.bind(this), anim);
+
     }
 
     getHeart = async () => {

@@ -3,10 +3,8 @@
     "",
     "\\pages",
     "\\pages\\components",
-    "\\pages\\components\\Programs",
-    "\\pages\\_styles",
     "\\public"
   ],
-  "SelectedNode": "\\pages\\_app.js",
+  "SelectedNode": "\\pages\\components\\graphGrid.jsx",
   "PreviewInSolutionExplorer": false
 }

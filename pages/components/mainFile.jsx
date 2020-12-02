@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import Sorting from './sortingVisualizer';
+//import Sorting from './sortingVisualizer';
 import HomePage from '../home';
 
 class MainFile extends Component {
@@ -11,7 +11,7 @@ class MainFile extends Component {
             home: {
                 title: 'DS and Algorithms',
                 subTitle: 'Visualizers and Animations',
-                container: <Sorting />,
+                container: <div />,
             },
             about: {
                 title: 'About us'
@@ -34,7 +34,7 @@ class MainFile extends Component {
                         <Navbar.Collapse id="navbar-toggle">
                             <Nav className="ml-auto">
                                 <Nav.Link href="/about" className="nav-link">About</Nav.Link>
-                                <Nav.Link href="/getStarted" className="nav-link">Get Started</Nav.Link>
+                                <Nav.Link href="/components/graphGrid" className="nav-link">Get Started</Nav.Link>
                                 <Nav.Link href="https://www.github.com" className="nav-link"><i id="github" className="mr-3 fa fa-github" /></Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
