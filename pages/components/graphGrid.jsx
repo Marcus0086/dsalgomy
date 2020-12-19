@@ -2,33 +2,54 @@ import React, { Component } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import $ from "jquery";
 import styles from '../_styles/grid.module.css';
+
 export default class GraphGrid extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            array: [],
+            rowArray: [],
+            colArray: [],
             disabled: false,
+            idxE: [],
+            activeElements: undefined,
             gridItems: undefined,
+            tdClass: undefined,
+            imgClass: undefined,
+            rowP: 0,
+            colP: 0,
         };
     }
 
     componentDidMount = () => {
-        
+        this.createGrid(); 
+        const activeClass = document.getElementsByClassName(styles.active);
+        const imgClass = document.getElementsByClassName(styles.imgClass);
+        const tdClass = styles.gridItems;
         const gridItems = document.getElementsByClassName(styles.gridItems);
+        this.setState({ activeClass: activeClass });
         this.setState({ gridItems: gridItems });
-        //window.onload = requestAnimationFrame(async () => {
-        //    await this.smiley();
-        //});
-        this.createDiv();
+        this.setState({ imgClass: imgClass });
+        this.setState({ tdClass: tdClass });
+
     }
 
-    createDiv = () => {
-        let array = [];
-        for (let i = 0; i < 2100; i++) {
-            array.push(i);
+    createGrid = () => {
+        const idxE = [17, 6];
+        let rowArray = [];
+        for (let i = 0; i <= 30; i++) {
+            rowArray.push(i);
         }
-        this.setState({ array: array });
+        let colArray = [];
+        for (let i = 0; i < 70; i++) {
+            colArray.push(i);
+        }
+        this.setState({ rowArray: rowArray });
+        this.setState({ colArray: colArray });
+        this.setState({ idxE: idxE });
+
     }
+
+
     //test
     smiley = () => {
         let disabled = false;
@@ -47,7 +68,7 @@ export default class GraphGrid extends Component {
         setTimeout(function () { this.setState({ disabled: disabled }) }.bind(this), anim);
     }
 
-    getSmiley = async () => {
+    getSmiley = () => {
         let disabled = true;
         this.setState({ disabled: disabled });
         return this.smiley();
@@ -73,45 +94,33 @@ export default class GraphGrid extends Component {
 
     }
 
-    getHeart = async () => {
+    getHeart = () => {
         let disabled = true;
         this.setState({ disabled: disabled });
         return this.heart();
     }
     //to this
-    handleClick = idx => {
-        requestAnimationFrame(() => {
-            this.state.gridItems[idx].classList.add(styles.active);
+    handleClick = () => {
+        $(this.state.gridItems).click(function () {
+            $(this).addClass(styles.active);
         });
     }
 
     handleMouseMove = () => {
-        requestAnimationFrame(() => {
-            $(this.state.gridItems).on("mousedown mouseover", function (e) {
-                if (e.buttons === 1) {
-                    $(this).addClass(styles.active);
-                }
-            })
-            
+        $(this.state.gridItems).on("mousedown mouseover", function (e) {
+            if (e.buttons === 1) {
+                e.preventDefault();
+                $(this).addClass(styles.active);
+            }
         });
     }
 
     handleRemoveMouseMove = () => {
-        requestAnimationFrame(() => {
-            $(this.state.gridItems).mouseup(
-                function () {
-                    $(this).removeClass(styles.active);
-                }
-            )
-        });
-    }
-
-    resetPath = () => {
-        this.state.arrayIdx.map(idx => {
-            requestAnimationFrame(() => {
-                this.state.gridItems[idx].classList.remove(styles.active);
-            });
-        });
+        $(this.state.gridItems).mouseup(
+            function () {
+                $(this).removeClass(styles.active);
+            }
+        )
     }
 
     resetPathN = async () => {
@@ -121,7 +130,11 @@ export default class GraphGrid extends Component {
     }
 
     render = () => {
-        const { array } = this.state;
+        const { imgClass } = this.state;
+        const { rowArray } = this.state;
+        const { colArray } = this.state;
+        let idP = 0;
+        let i = 0;
         return (
             <React.Fragment>
                 <Container className="p-0" fluid={true}>
@@ -136,20 +149,53 @@ export default class GraphGrid extends Component {
                     </Navbar>
                 </Container>
 
-
                 <button onClick={() => this.resetPathN()} disabled={this.state.disabled}>resetPath</button><br />
-                <button onClick={async () => this.resetPathN().then(this.getSmiley()).catch(err => console.log)} disabled={this.state.disabled} >Smiley</button><br />
-                <button onClick={async () => this.resetPathN().then(this.getHeart()).catch(err => console.log)} disabled={this.state.disabled} >Heart</button>
+                {/*<button onClick={async () => this.resetPathN().then(this.getSmiley()).catch(err => console.log)} disabled={this.state.disabled} >Smiley</button><br />
+                <button onClick={async () => this.resetPathN().then(this.getHeart()).catch(err => console.log)} disabled={this.state.disabled} >Heart</button>*/}
                 <div className={styles.gridContainer}>
-                    {array.map((value, idx) => (
-                        <div className={styles.gridItems} id={idx} key={idx}
-                            onClick={() => this.handleClick(idx)}
-                            onMouseEnter={() => this.handleMouseMove()}
-                            onMouseLeave={() => this.handleRemoveMouseMove()}
-                        >
-                            {value}
-                        </div>
-                    ))}
+                    <table>
+                        <tbody>
+                            {rowArray.map((valr, idxr) => (
+                                idP++,
+                                <tr key={idP} >
+                                    <td className={styles.lineNumber} key={"."+valr * idxr}>{idxr}</td>
+                                    {colArray.map((val, idx) => (
+                                        ((idxr === 0)) ? <td className={styles.lineNumber} key={".%"+idx+val+"#"}>{++i}</td> :
+                                        (((idxr === this.state.idxE[0]) && (idx === this.state.idxE[1])) ? (
+                                            <td className={styles.imgClass} draggable
+                                                key={idx + "-" + idxr} id={"img" + idxr + "-" + idx}
+                                                onDragStart={async () => {
+                                                    await imgClass[0].classList.add(styles.dragged)
+                                                }}
+                                                onDragEnd={async () => {
+                                                    await imgClass[0].classList.remove(styles.dragged)
+                                                }}
+                                            / >
+                                        ) : (
+                                                <td className={this.state.tdClass} draggable key={idx + "-" + idxr} id={idxr + "-" + idx}
+                                                    onDragOver={(e) => {
+                                                        e.preventDefault();
+                                                    }}
+                                                    onClick={() => {
+                                                        this.handleClick();
+                                                    }}
+                                                    onMouseEnter={() => this.handleMouseMove()}
+                                                    onMouseLeave={() => this.handleRemoveMouseMove()}
+                                                    >
+                                                </td>
+                                            ))
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className={styles.card}>
+                    <p>Change start Node location:</p>
+                    <label htmlFor="rowCoordinate">Enter row:</label>
+                    <input type="text" id="row" name="rCoord" /><br />
+                    <label htmlFor="colCoordinate">Enter col:</label>
+                    <input type="text" id="col" name="cCoord" />
                 </div>
             </React.Fragment>
             );
